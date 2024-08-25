@@ -8,7 +8,6 @@ const httpStatus = require("./utils/httpStatusText");
 
 require("dotenv").config(); // for env variables
 const url = process.env.MONGO_URL;
-console.log(url);
 app.use(express.json()); // for parsing application/json body parser
 
 mongoose

@@ -11,11 +11,6 @@ const getAllCourses = asyncWrapper(async (req, res) => {
   const skip = (page - 1) * limit;
   // get all courses from db using course model
   const courses = await Course.find({}, { __v: 0 }).limit(limit).skip(skip);
-  console.log("query", query);
-  console.log("limit", limit);
-  console.log("page", page);
-  console.log("skip", skip);
-  console.log("courses", courses);
   if (!courses) {
     const error = AppError.create("courses not found", 404, httpStatus.FAIL);
     return next(error); // will send this error to the global error handler in the index.js
