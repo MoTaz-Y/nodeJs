@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
+const verifyToken = require("../middleWares/verifyToken");
 
 const { validationSchema } = require("../middleWares/courses.middleware");
 
 const usersController = require("../controllers/users.controllers");
 const usersAuth = require("../controllers/users.auth");
 // get all users
-router.route(`/`).get(usersController.getAllUsers); //get all the users
+router.route(`/`).get(verifyToken, usersController.getAllUsers); //get all the users
 
 // register
 router.route(`/register`).post(
   //register
-  // validationSchema(),
+  validationSchema(),
   usersAuth.register
 );
 

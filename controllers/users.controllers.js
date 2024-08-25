@@ -19,11 +19,36 @@ const getAllUsers = asyncWrapper(async (req, res) => {
 
 // update user
 const updateUser = asyncWrapper(async (req, res, next) => {
-  
+  const userId = req.params.userId;
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = AppError.create("users not found", 404, httpStatus.FAIL);
+    return next(error);
+  }
+  const updatedUser = await User.updateOne(
+    { _id: userId },
+    {
+      $set: { ...req.body },
+    }
+  );
+  return res
+    .status(200)
+    .json({ status: httpStatus.SUCCESS, data: { updatedUser } });
 });
 
 // delete user
-const deleteUser = asyncWrapper(async (req, res, next) => {});
+const deleteUser = asyncWrapper(async (req, res, next) => {
+  const userId = req.params.userId;
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = AppError.create("users not found", 404, httpStatus.FAIL);
+    return next(error);
+  }
+  const deletedUser = await User.deleteOne({ _id: userId });
+  return res
+    .status(200)
+    .json({ status: httpStatus.SUCCESS, data: { deletedUser } });
+});
 
 module.exports = {
   getAllUsers,

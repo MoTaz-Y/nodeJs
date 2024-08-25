@@ -7,7 +7,7 @@ const coursesSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: [validator.isEmail, "invalid email address"],
+    validate: [validator.isEmail, "invalid email address"], //custom validation validatorjs
   },
   password: { type: String, required: true },
   token: { type: String },

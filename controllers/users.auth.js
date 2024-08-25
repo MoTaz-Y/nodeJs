@@ -4,17 +4,17 @@ const httpStatus = require("../utils/httpStatusText");
 const User = require("../models/users.models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const generateJwt = require("../utils/generateJwt");
 // register
 const register = asyncWrapper(async (req, res, next) => {
   const { firstBname, lastName, email, password } = req.body;
-  const oldUser = await User.findOne({ email:email });
+  const oldUser = await User.findOne({ email: email });
   if (oldUser) {
     const error = AppError.create("user already exists", 400, httpStatus.FAIL);
     return next(error);
   }
   const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, salt); //bcryptjs hash password
   const newUser = await User.create({
     firstBname,
     lastName,
@@ -22,9 +22,9 @@ const register = asyncWrapper(async (req, res, next) => {
     password: hashedPassword,
   });
   //generate jwt token
-  jwt.sign({email:newUser.email, id: newUser._id}, secretOrPrivateKey)
-  const token = newUser.generateJwtToken();
+  const token = await generateJwt({ email: newUser.email, id: newUser._id });
 
+  newUser.token = token;
   await newUser.save();
 
   res.status(201).json({ status: httpStatus.SUCCESS, data: { newUser } });
@@ -41,7 +41,7 @@ const login = asyncWrapper(async (req, res, next) => {
     );
     return next(error);
   }
-  const user = await User.findOne({ email : email }); 
+  const user = await User.findOne({ email: email });
   if (!user) {
     const error = AppError.create("user not found", 404, httpStatus.FAIL);
     return next(error);
@@ -51,7 +51,12 @@ const login = asyncWrapper(async (req, res, next) => {
     const error = AppError.create("incorrect password", 400, httpStatus.FAIL);
     return next(error);
   }
-  res.status(200).json({ status: httpStatus.SUCCESS, data: { user } });
+
+  const token = await generateJwt({ email: user.email, id: user._id });
+  user.token = token;
+  await user.save();
+
+  res.status(200).json({ status: httpStatus.SUCCESS, data: { token } });
 });
 
 module.exports = {
