@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const generateJwt = require("../utils/generateJwt");
 // register
 const register = asyncWrapper(async (req, res, next) => {
-  const { firstBname, lastName, email, password } = req.body;
+  const { firstBname, lastName, email, password, role } = req.body;
   const oldUser = await User.findOne({ email: email });
   if (oldUser) {
     const error = AppError.create("user already exists", 400, httpStatus.FAIL);
@@ -20,9 +20,14 @@ const register = asyncWrapper(async (req, res, next) => {
     lastName,
     email,
     password: hashedPassword,
+    role,
   });
   //generate jwt token
-  const token = await generateJwt({ email: newUser.email, id: newUser._id });
+  const token = await generateJwt({
+    email: newUser.email,
+    id: newUser._id,
+    role: newUser.role,
+  });
 
   newUser.token = token;
   await newUser.save();
@@ -52,7 +57,11 @@ const login = asyncWrapper(async (req, res, next) => {
     return next(error);
   }
 
-  const token = await generateJwt({ email: user.email, id: user._id });
+  const token = await generateJwt({
+    email: user.email,
+    id: user._id,
+    role: user.role,
+  });
   user.token = token;
   await user.save();
 
