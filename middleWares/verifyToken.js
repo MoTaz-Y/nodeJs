@@ -6,7 +6,8 @@ const verifyToken = (req, res, next) => {
     req.headers["authorization"] || req.headers["Authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ message: "unauthorized" });
+    const error = AppError.create("unauthorized", 401, httpStatus.ERROR);
+    return next(error);
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {

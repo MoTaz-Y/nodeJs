@@ -4,7 +4,7 @@ const httpStatus = require("../utils/httpStatusText");
 const asyncWrapper = require("../middleWares/asyncWrapper");
 const AppError = require("../utils/appError");
 // get all courses
-const getAllCourses = asyncWrapper(async (req, res) => {
+const getAllCourses = asyncWrapper(async (req, res, next) => {
   const query = req.query;
   const limit = query.limit || 10;
   const page = query.page || 1;

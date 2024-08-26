@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const userRole = require("../utils/userRole");
-const coursesSchema = new mongoose.Schema({
+const usersSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: {
@@ -14,12 +14,12 @@ const coursesSchema = new mongoose.Schema({
   token: { type: String },
   role: {
     type: String,
-    enum: [userRole.ADMIN, userRole.USER, userRole.GUEST],
+    enum: [userRole.ADMIN, userRole.USER, userRole.GUEST, userRole.MANAGER],
     default: userRole.GUEST,
   },
   avatar: { type: String, default: "public/profile.webp" },
 });
-module.exports = mongoose.model("User", coursesSchema);
+module.exports = mongoose.model("User", usersSchema);
 // vbbv?
 
 // models\users.model.js

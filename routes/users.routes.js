@@ -43,7 +43,7 @@ router.route(`/`).get(verifyToken, usersController.getAllUsers); //get all the u
 // register
 router.route(`/register`).post(
   //register
-  upload.sinfle("avatar"),
+  upload.single("avatar"),
   validationSchema(),
   usersAuth.register
 );

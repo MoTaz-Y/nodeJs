@@ -9,7 +9,7 @@ const path = require("path");
 require("dotenv").config(); // for env variables
 const url = process.env.MONGO_URL;
 app.use(express.json()); // for parsing application/json body parser
-app.use("/public", express.static(patch.join(__dirname, "public")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 mongoose
   .connect(url)
