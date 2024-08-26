@@ -5,10 +5,11 @@ const coursesRouter = require("./routes/courses.routes");
 const usersRouter = require("./routes/users.routes");
 const cors = require("cors");
 const httpStatus = require("./utils/httpStatusText");
-
+const path = require("path");
 require("dotenv").config(); // for env variables
 const url = process.env.MONGO_URL;
 app.use(express.json()); // for parsing application/json body parser
+app.use("/public", express.static(patch.join(__dirname, "public")));
 
 mongoose
   .connect(url)

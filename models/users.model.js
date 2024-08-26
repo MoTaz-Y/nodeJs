@@ -17,6 +17,7 @@ const coursesSchema = new mongoose.Schema({
     enum: [userRole.ADMIN, userRole.USER, userRole.GUEST],
     default: userRole.GUEST,
   },
+  avatar: { type: String, default: "public/profile.webp" },
 });
 module.exports = mongoose.model("User", coursesSchema);
 // vbbv?
